@@ -1,19 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using BibliotecaApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Carregar a configuração do arquivo appsettings.json
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
 
+// Adicionar serviços ao contêiner.
 builder.Services.AddControllers();
-builder.Services.AddDbContext<LibraryContext>(opt => opt.UseSqlServer("LibraryList"));
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<LibraryContext>(options =>
+    options.UseSqlServer(configuration.GetConnectionString("ConexaoPadrao")));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -94,7 +94,7 @@ namespace BibliotecaApi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetLibraryRegistration", new { id = libraryRegistration.Name }, libraryRegistration);
+            return CreatedAtAction(nameof(GetLibraryRegistration), new { id = libraryRegistration.Name }, libraryRegistration);
         }
 
         // DELETE: api/LibraryRegistrations/5
