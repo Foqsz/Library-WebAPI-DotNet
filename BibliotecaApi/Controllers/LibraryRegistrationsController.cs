@@ -22,14 +22,16 @@ namespace BibliotecaApi.Controllers
 
         // GET: api/LibraryRegistrations
         [HttpGet("UsuariosCadastrados")]
-        public async Task<ActionResult<IEnumerable<LibraryRegistration>>> GetRegistration()
+        public async Task<ActionResult<IEnumerable<LibraryRegistrationDTO>>> GetRegistration()
         {
-            return await _context.Registration.ToListAsync();
+            return await _context.Registration
+                .Select(x => LibraryIsDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/LibraryRegistrations/5
-        [HttpGet("PesquisaPorNome")]
-        public async Task<ActionResult<LibraryRegistration>> GetLibraryRegistration(string name)
+        [HttpGet("{name} PesquisaPorNome")]
+        public async Task<ActionResult<LibraryRegistrationDTO>> GetLibraryRegistration(string name)
         {
             var libraryRegistration = await _context.Registration.FindAsync(name);
 
@@ -38,35 +40,36 @@ namespace BibliotecaApi.Controllers
                 return NotFound();
             }
 
-            return libraryRegistration;
+            return LibraryIsDTO(libraryRegistration);
         }
 
         // PUT: api/LibraryRegistrations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("EditarSuasInformacoes")]
-        public async Task<IActionResult> PutLibraryRegistration(string name, LibraryRegistration libraryRegistration)
+        [HttpPut("{name} EditarSuasInformacoes")]
+        public async Task<IActionResult> PutLibraryRegistration(string name, LibraryRegistrationDTO libraryDTO)
         {
-            if (name != libraryRegistration.Name)
+            if (name != libraryDTO.Name)
             {
                 return BadRequest();
             }
 
-            _context.Entry(libraryRegistration).State = EntityState.Modified;
+            var libraryRegistration = await _context.Registration.FindAsync(name);
+            if (libraryRegistration == null)
+            {
+                return NotFound();
+            }
+
+            libraryRegistration.Name = libraryDTO.Name;
+            libraryRegistration.Email = libraryDTO.Email;
+            libraryRegistration.Senha = libraryDTO.Senha;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!LibraryRegistrationExists(name))
             {
-                if (!LibraryRegistrationExists(name))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -75,30 +78,26 @@ namespace BibliotecaApi.Controllers
         // POST: api/LibraryRegistrations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("Cadastramento")]
-        public async Task<ActionResult<LibraryRegistration>> PostLibraryRegistration(LibraryRegistration libraryRegistration)
+        public async Task<ActionResult<LibraryRegistrationDTO>> PostLibraryRegistration(LibraryRegistrationDTO libraryIsDTO)
         {
-            _context.Registration.Add(libraryRegistration);
-            try
+            var libraryRegistration = new LibraryRegistration()
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (LibraryRegistrationExists(libraryRegistration.Name))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                Name = libraryIsDTO.Name,
+                Email = libraryIsDTO.Email,
+                Senha = libraryIsDTO.Senha
+            };
 
-            return CreatedAtAction(nameof(GetLibraryRegistration), new { id = libraryRegistration.Name }, libraryRegistration);
+            _context.Registration.Add(libraryRegistration);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetLibraryRegistration),
+                new { name = libraryRegistration.Name },
+                LibraryIsDTO(libraryRegistration));
         }
 
         // DELETE: api/LibraryRegistrations/5
-        [HttpDelete("ManipulacaoDeUsuario")]
+        [HttpDelete("{name} ManipulacaoDeUsuario")]
         public async Task<IActionResult> DeleteLibraryRegistration(string name)
         {
             var libraryRegistration = await _context.Registration.FindAsync(name);
@@ -117,5 +116,13 @@ namespace BibliotecaApi.Controllers
         {
             return _context.Registration.Any(e => e.Name == id);
         }
+
+        private static LibraryRegistrationDTO LibraryIsDTO(LibraryRegistration libraryRegistration) =>
+            new LibraryRegistrationDTO
+            {
+                Name = libraryRegistration.Name,
+                Email = libraryRegistration.Email,
+                Senha = libraryRegistration.Senha
+            };
     }
 }

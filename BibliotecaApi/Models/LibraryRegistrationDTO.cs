@@ -2,13 +2,12 @@
 
 namespace BibliotecaApi.Models
 {
-    public class LibraryRegistration
+    public class LibraryRegistrationDTO
     {
         [Key]
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Senha { get; set; }
-        public string? Secret { get; set; }
-         
+        public string Senha { get; set; } 
+
     }
 }
