@@ -21,17 +21,17 @@ namespace BibliotecaApi.Controllers
         }
 
         // GET: api/LibraryRegistrations
-        [HttpGet]
+        [HttpGet("UsuariosCadastrados")]
         public async Task<ActionResult<IEnumerable<LibraryRegistration>>> GetRegistration()
         {
             return await _context.Registration.ToListAsync();
         }
 
         // GET: api/LibraryRegistrations/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LibraryRegistration>> GetLibraryRegistration(string id)
+        [HttpGet("PesquisaPorNome")]
+        public async Task<ActionResult<LibraryRegistration>> GetLibraryRegistration(string name)
         {
-            var libraryRegistration = await _context.Registration.FindAsync(id);
+            var libraryRegistration = await _context.Registration.FindAsync(name);
 
             if (libraryRegistration == null)
             {
@@ -43,10 +43,10 @@ namespace BibliotecaApi.Controllers
 
         // PUT: api/LibraryRegistrations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLibraryRegistration(string id, LibraryRegistration libraryRegistration)
+        [HttpPut("EditarSuasInformacoes")]
+        public async Task<IActionResult> PutLibraryRegistration(string name, LibraryRegistration libraryRegistration)
         {
-            if (id != libraryRegistration.Name)
+            if (name != libraryRegistration.Name)
             {
                 return BadRequest();
             }
@@ -59,7 +59,7 @@ namespace BibliotecaApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!LibraryRegistrationExists(id))
+                if (!LibraryRegistrationExists(name))
                 {
                     return NotFound();
                 }
@@ -74,7 +74,7 @@ namespace BibliotecaApi.Controllers
 
         // POST: api/LibraryRegistrations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("Cadastramento")]
         public async Task<ActionResult<LibraryRegistration>> PostLibraryRegistration(LibraryRegistration libraryRegistration)
         {
             _context.Registration.Add(libraryRegistration);
@@ -98,10 +98,10 @@ namespace BibliotecaApi.Controllers
         }
 
         // DELETE: api/LibraryRegistrations/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLibraryRegistration(string id)
+        [HttpDelete("ManipulacaoDeUsuario")]
+        public async Task<IActionResult> DeleteLibraryRegistration(string name)
         {
-            var libraryRegistration = await _context.Registration.FindAsync(id);
+            var libraryRegistration = await _context.Registration.FindAsync(name);
             if (libraryRegistration == null)
             {
                 return NotFound();
