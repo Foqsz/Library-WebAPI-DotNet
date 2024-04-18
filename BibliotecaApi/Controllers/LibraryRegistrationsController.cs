@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using BibliotecaApi.Models;
+using BibliotecaApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaApi.Controllers
 {
@@ -13,116 +9,83 @@ namespace BibliotecaApi.Controllers
     [ApiController]
     public class LibraryRegistrationsController : ControllerBase
     {
-        private readonly LibraryContext _context;
+        private readonly IUsuarioServiceDTO _usuario;
 
-        public LibraryRegistrationsController(LibraryContext context)
+        public LibraryRegistrationsController(IUsuarioServiceDTO usuario)
         {
-            _context = context;
+            _usuario = usuario;
         }
 
-        // GET: api/LibraryRegistrations
         [HttpGet("UsuariosCadastrados")]
-        public async Task<ActionResult<IEnumerable<LibraryRegistrationDTO>>> GetRegistration()
+        public async Task<ActionResult<IEnumerable<ServiceUsuarioDTO>>> GetUsuariosCadastrados()
         {
-            return await _context.Registration
-                .Select(x => LibraryIsDTO(x))
-                .ToListAsync();
+            var usuarios = await _usuario.ObterUsuariosCadastrados();
+            return Ok(usuarios);
         }
 
-        // GET: api/LibraryRegistrations/5
-        [HttpGet("{name} PesquisaPorNome")]
-        public async Task<ActionResult<LibraryRegistrationDTO>> GetLibraryRegistration(string name)
+        [HttpGet("{id} PesquisaPorId")]
+        public async Task<ActionResult<ServiceUsuarioDTO>> GetLibraryPesquisa(int id)
         {
-            var libraryRegistration = await _context.Registration.FindAsync(name);
-
-            if (libraryRegistration == null)
+            var usuario = await _usuario.ObterUsuarioPorId(id);
+            if (id == null)
             {
                 return NotFound();
             }
-
-            return LibraryIsDTO(libraryRegistration);
+            return Ok(usuario);
         }
 
-        // PUT: api/LibraryRegistrations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{name} EditarSuasInformacoes")]
-        public async Task<IActionResult> PutLibraryRegistration(string name, LibraryRegistrationDTO libraryDTO)
+        [HttpPut("{id} EditarSuasInformacoes")]
+        public async Task<IActionResult> GetLibraryInformation(int id, ServiceUsuarioDTO usuario)
         {
-            if (name != libraryDTO.Name)
-            {
-                return BadRequest();
-            }
-
-            var libraryRegistration = await _context.Registration.FindAsync(name);
-            if (libraryRegistration == null)
+            if (id == null)
             {
                 return NotFound();
             }
+            try
+            {
+                await _usuario.AtualizarUsuario(usuario);
+            }
 
-            libraryRegistration.Name = libraryDTO.Name;
-            libraryRegistration.Email = libraryDTO.Email;
-            libraryRegistration.Senha = libraryDTO.Senha;
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
+        }
+
+        [HttpPost("Cadastramento")]
+        public async Task<IActionResult> GetLibraryRegistration(ServiceUsuarioDTO novoUsuario)
+        { 
+            try
+            {
+                await _usuario.InserirUsuario(novoUsuario);
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+            return Ok(novoUsuario);
+        }
+
+        [HttpDelete("{id} ManipulacaoDeUsuario")]
+        public async Task<IActionResult> GetLibraryDelete(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _usuario.ExcluirUsuario(id);
             }
-            catch (DbUpdateConcurrencyException) when (!LibraryRegistrationExists(name))
+
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/LibraryRegistrations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("Cadastramento")]
-        public async Task<ActionResult<LibraryRegistrationDTO>> PostLibraryRegistration(LibraryRegistrationDTO libraryIsDTO)
-        {
-            var libraryRegistration = new LibraryRegistration()
-            {
-                Name = libraryIsDTO.Name,
-                Email = libraryIsDTO.Email,
-                Senha = libraryIsDTO.Senha
-            };
-
-            _context.Registration.Add(libraryRegistration);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(
-                nameof(GetLibraryRegistration),
-                new { name = libraryRegistration.Name },
-                LibraryIsDTO(libraryRegistration));
-        }
-
-        // DELETE: api/LibraryRegistrations/5
-        [HttpDelete("{name} ManipulacaoDeUsuario")]
-        public async Task<IActionResult> DeleteLibraryRegistration(string name)
-        {
-            var libraryRegistration = await _context.Registration.FindAsync(name);
-            if (libraryRegistration == null)
-            {
-                return NotFound();
-            }
-
-            _context.Registration.Remove(libraryRegistration);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool LibraryRegistrationExists(string id)
-        {
-            return _context.Registration.Any(e => e.Name == id);
-        }
-
-        private static LibraryRegistrationDTO LibraryIsDTO(LibraryRegistration libraryRegistration) =>
-            new LibraryRegistrationDTO
-            {
-                Name = libraryRegistration.Name,
-                Email = libraryRegistration.Email,
-                Senha = libraryRegistration.Senha
-            };
+            }  
+            return Ok(id);
+        } 
     }
 }
