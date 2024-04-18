@@ -1,4 +1,5 @@
 ﻿using BibliotecaApi.Models;
+using BibliotecaApi.Repositorios.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,23 +15,23 @@ namespace BibliotecaApi.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ServiceUsuarioDTO>> ObterUsuariosCadastrados()
+        public async Task<IEnumerable<ServiceUsuarioModel>> ObterUsuariosCadastrados()
         {
             return await _context.Registration.ToListAsync();
         }
 
-        public async Task<ServiceUsuarioDTO> ObterUsuarioPorId(int id)
+        public async Task<ServiceUsuarioModel> ObterUsuarioPorId(int id)
         {
             return await _context.Registration.FindAsync(id);
         }
 
-        public async Task InserirUsuario(ServiceUsuarioDTO usuario)
+        public async Task InserirUsuario(ServiceUsuarioModel usuario)
         {
             _context.Registration.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
-        public async Task AtualizarUsuario(ServiceUsuarioDTO usuario)
+        public async Task AtualizarUsuario(ServiceUsuarioModel usuario)
         {
             _context.Entry(usuario).State = EntityState.Modified;
             await _context.SaveChangesAsync();

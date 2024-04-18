@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using BibliotecaApi.Models; 
+using BibliotecaApi.Models;
 using BibliotecaApi.Repository;
+using BibliotecaApi.Repositorios.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

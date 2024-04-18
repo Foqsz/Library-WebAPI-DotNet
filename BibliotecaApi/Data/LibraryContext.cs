@@ -9,6 +9,6 @@ namespace BibliotecaApi.Models
         {
         }
 
-        public DbSet<ServiceUsuarioDTO> Registration { get; set; }
+        public DbSet<ServiceUsuarioModel> Registration { get; set; }
     }
 }

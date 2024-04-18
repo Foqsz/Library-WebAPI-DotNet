@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BibliotecaApi.Models;
-using BibliotecaApi.Repository;
 using Microsoft.EntityFrameworkCore;
+using BibliotecaApi.Repositorios.Interfaces;
 
 namespace BibliotecaApi.Controllers
 {
@@ -17,14 +17,14 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpGet("UsuariosCadastrados")]
-        public async Task<ActionResult<IEnumerable<ServiceUsuarioDTO>>> GetUsuariosCadastrados()
+        public async Task<ActionResult<IEnumerable<ServiceUsuarioModel>>> GetUsuariosCadastrados()
         {
             var usuarios = await _usuario.ObterUsuariosCadastrados();
             return Ok(usuarios);
         }
 
         [HttpGet("{id} PesquisaPorId")]
-        public async Task<ActionResult<ServiceUsuarioDTO>> GetLibraryPesquisa(int id)
+        public async Task<ActionResult<ServiceUsuarioModel>> GetLibraryPesquisa(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
             if (id == null)
@@ -35,7 +35,7 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpPut("{id} EditarSuasInformacoes")]
-        public async Task<IActionResult> GetLibraryInformation(int id, ServiceUsuarioDTO usuario)
+        public async Task<IActionResult> GetLibraryInformation(int id, ServiceUsuarioModel usuario)
         {
             if (id == null)
             {
@@ -54,7 +54,7 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpPost("Cadastramento")]
-        public async Task<IActionResult> GetLibraryRegistration(ServiceUsuarioDTO novoUsuario)
+        public async Task<IActionResult> GetLibraryRegistration(ServiceUsuarioModel novoUsuario)
         { 
             try
             {

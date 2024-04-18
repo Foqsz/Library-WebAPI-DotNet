@@ -2,7 +2,7 @@
 
 namespace BibliotecaApi.Models
 {
-    public class ServiceUsuarioDTO 
+    public class ServiceUsuarioModel 
     {
         [Key]
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace BibliotecaApi.Models
         [Required(ErrorMessage = "Digite sua senha.")]
         public string Senha { get; set; }
 
-        public ServiceUsuarioDTO(int id, string name, string email, string senha)
+        public ServiceUsuarioModel(int id, string name, string email, string senha)
         {
             Id = id;
             Name = name;
