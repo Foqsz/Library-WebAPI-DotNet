@@ -7,24 +7,24 @@ namespace BibliotecaApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LibraryRegistrationsController : ControllerBase
+    public class UsuarioController : ControllerBase
     {
-        private readonly IUsuarioServiceDTO _usuario;
+        private readonly IUsuarioRepository _usuario;
 
-        public LibraryRegistrationsController(IUsuarioServiceDTO usuario)
+        public UsuarioController(IUsuarioRepository usuario)
         {
             _usuario = usuario;
         }
 
         [HttpGet("UsuariosCadastrados")]
-        public async Task<ActionResult<IEnumerable<ServiceUsuarioModel>>> GetUsuariosCadastrados()
+        public async Task<ActionResult<IEnumerable<UsuarioModel>>> GetUsuariosCadastrados()
         {
             var usuarios = await _usuario.ObterUsuariosCadastrados();
             return Ok(usuarios);
         }
 
         [HttpGet("{id} PesquisaPorId")]
-        public async Task<ActionResult<ServiceUsuarioModel>> GetLibraryPesquisa(int id)
+        public async Task<ActionResult<UsuarioModel>> GetLibraryPesquisa(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
             if (id == null)
@@ -35,7 +35,7 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpPut("{id} EditarSuasInformacoes")]
-        public async Task<IActionResult> GetLibraryInformation(int id, ServiceUsuarioModel usuario)
+        public async Task<IActionResult> GetLibraryInformation(int id, UsuarioModel usuario)
         {
             if (id == null)
             {
@@ -54,7 +54,7 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpPost("Cadastramento")]
-        public async Task<IActionResult> GetLibraryRegistration(ServiceUsuarioModel novoUsuario)
+        public async Task<IActionResult> GetLibraryRegistration(UsuarioModel novoUsuario)
         { 
             try
             {

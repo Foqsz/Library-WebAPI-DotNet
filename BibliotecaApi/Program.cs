@@ -1,8 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore; 
 using BibliotecaApi.Models;
+using BibliotecaApi.Repositorios.Interfaces; 
 using BibliotecaApi.Repository;
-using BibliotecaApi.Repositorios.Interfaces;
+using BibliotecaApi.Services.Interfaces;
+using BibliotecaApi.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,8 @@ var configuration = new ConfigurationBuilder()
 builder.Services.AddControllers();
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("ConexaoPadrao")));
-builder.Services.AddScoped<IUsuarioServiceDTO, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BibliotecaApi.Repository
 {
-    public class UsuarioRepository : IUsuarioServiceDTO
+    public class UsuarioRepository : IUsuarioRepository
     {
         private readonly LibraryContext _context;
 
@@ -15,23 +15,23 @@ namespace BibliotecaApi.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ServiceUsuarioModel>> ObterUsuariosCadastrados()
+        public async Task<IEnumerable<UsuarioModel>> ObterUsuariosCadastrados()
         {
             return await _context.Registration.ToListAsync();
         }
 
-        public async Task<ServiceUsuarioModel> ObterUsuarioPorId(int id)
+        public async Task<UsuarioModel> ObterUsuarioPorId(int id)
         {
             return await _context.Registration.FindAsync(id);
         }
 
-        public async Task InserirUsuario(ServiceUsuarioModel usuario)
+        public async Task InserirUsuario(UsuarioModel usuario)
         {
             _context.Registration.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
-        public async Task AtualizarUsuario(ServiceUsuarioModel usuario)
+        public async Task AtualizarUsuario(UsuarioModel usuario)
         {
             _context.Entry(usuario).State = EntityState.Modified;
             await _context.SaveChangesAsync();
