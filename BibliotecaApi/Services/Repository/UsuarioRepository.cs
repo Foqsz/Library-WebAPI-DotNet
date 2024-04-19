@@ -1,7 +1,9 @@
-﻿using BibliotecaApi.Models;
+﻿using Amazon.Auth.AccessControlPolicy;
+using BibliotecaApi.Models;
 using BibliotecaApi.Repositorios.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace BibliotecaApi.Repository
@@ -39,12 +41,12 @@ namespace BibliotecaApi.Repository
 
         public async Task ExcluirUsuario(int id)
         {
-            var usuario = await _context.Registration.FindAsync(id);
+            var usuario = await _context.Registration.FindAsync(id); 
             if (usuario != null)
             {
                 _context.Registration.Remove(usuario);
                 await _context.SaveChangesAsync();
             }
-        }
+        } 
     }
 }

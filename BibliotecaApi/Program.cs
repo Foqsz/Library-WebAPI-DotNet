@@ -21,7 +21,7 @@ builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+var app = builder.Build(); 
 
 // Configure o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())

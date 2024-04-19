@@ -24,14 +24,10 @@ namespace BibliotecaApi.Controllers
             return Ok(usuarios);
         }
 
-        [HttpGet("{name} PesquisarLivro")]
-        public async Task<ActionResult<UsuarioModel>> GetLibraryPesquisa(string name, string titulo, string autor, string genero)
+        [HttpGet("PesquisarLivro")]
+        public async Task<ActionResult<UsuarioModel>> GetLibraryPesquisa(string titulo, string autor, string genero)
         {
             var livro = await _livro.PesquisarLivros(titulo, autor, genero);
-            if (name == null)
-            {
-                return NotFound();
-            }
             return Ok(livro);
         }
         /*
