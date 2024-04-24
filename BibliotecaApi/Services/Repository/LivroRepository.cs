@@ -1,6 +1,7 @@
 ﻿using BibliotecaApi.Model;
 using BibliotecaApi.Models;
 using BibliotecaApi.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaApi.Services.Repository
 {
@@ -19,9 +20,9 @@ namespace BibliotecaApi.Services.Repository
             throw new NotImplementedException();
         }
 
-        public async Task DevolverLivro(string name)
+        public async Task DevolverLivro(int id)
         {
-            var livro = await _context.livroModels.FindAsync(name);
+            var livro = await _context.livroModels.FindAsync(id);
             if (livro != null)
             {
                 _context.livroModels.Remove(livro);
@@ -37,7 +38,7 @@ namespace BibliotecaApi.Services.Repository
 
         public async Task<IEnumerable<LivroModel>> ObterLivrosDisponiveis()
         {
-            throw new NotImplementedException();
+            return await _context.livroModels.ToListAsync();
         }
 
         public async Task<LivroModel> PesquisarLivros(string titulo, string autor, string genero)

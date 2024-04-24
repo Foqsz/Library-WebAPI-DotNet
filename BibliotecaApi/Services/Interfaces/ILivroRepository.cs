@@ -8,7 +8,7 @@ namespace BibliotecaApi.Services.Interfaces
         Task<IEnumerable<LivroModel>> ObterLivrosDisponiveis();
         Task<LivroModel> PesquisarLivros(string titulo, string autor, string genero);
         Task EmprestarLivro(LivroModel livro);
-        Task DevolverLivro(string name);
+        Task DevolverLivro(int id);
         Task AtualizarLivros(LivroModel livro);
     }
 }
