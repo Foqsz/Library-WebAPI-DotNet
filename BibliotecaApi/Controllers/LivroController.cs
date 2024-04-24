@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BibliotecaApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LivroController : ControllerBase
