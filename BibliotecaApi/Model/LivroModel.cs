@@ -1,7 +1,5 @@
 ﻿using BibliotecaApi.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Principal;
-using System.Web.Http;
+using System.ComponentModel.DataAnnotations; 
 
 namespace BibliotecaApi.Model
 {

@@ -5,10 +5,11 @@ namespace BibliotecaApi.Services.Interfaces
 {
     public interface ILivroRepository
     {
-        Task<IEnumerable<LivroModel>> ObterLivrosDisponiveis();
+        Task<IEnumerable<UserLivroModel>> ObterLivrosDisponiveis();
         Task<LivroModel> PesquisarLivros(string titulo, string autor, string genero);
-        Task EmprestarLivro(LivroModel livro);
+        Task CadastrarLivro(LivroModel livro);
         Task DevolverLivro(int id);
         Task AtualizarLivros(LivroModel livro);
+        Task EmprestarLivro(UserLivroModel emprestimo);
     }
 }

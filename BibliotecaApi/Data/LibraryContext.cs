@@ -13,6 +13,7 @@ namespace BibliotecaApi.Models
 
         public DbSet<UsuarioModel> Registration { get; set; }
         public DbSet<LivroModel> livroModels { get; set; }
+        public DbSet<UserLivroModel> userLivroEmprestimo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

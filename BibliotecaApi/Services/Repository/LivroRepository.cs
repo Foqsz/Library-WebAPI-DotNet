@@ -31,20 +31,26 @@ namespace BibliotecaApi.Services.Repository
             }
         }
         
-        public async Task EmprestarLivro(LivroModel livro)
+        public async Task CadastrarLivro(LivroModel livro)
         {
             _context.livroModels.Add(livro);
             await _context.SaveChangesAsync(); 
         }
 
-        public async Task<IEnumerable<LivroModel>> ObterLivrosDisponiveis()
+        public async Task<IEnumerable<UserLivroModel>> ObterLivrosDisponiveis()
         {
-            return await _context.livroModels.ToListAsync();
+            return await _context.userLivroEmprestimo.ToListAsync();
         }
 
         public async Task<LivroModel> PesquisarLivros(string titulo, string autor, string genero)
         {
             return await _context.livroModels.FindAsync(titulo, autor, genero);
+        }
+
+        public async Task EmprestarLivro(UserLivroModel emprestimo)
+        {
+            _context.userLivroEmprestimo.Add(emprestimo);
+             await _context.SaveChangesAsync();
         }
     }
 }

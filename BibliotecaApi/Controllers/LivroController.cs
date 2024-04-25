@@ -20,10 +20,10 @@ namespace BibliotecaApi.Controllers
         }
 
         [HttpGet("LivrosEmprestados")]
-        public async Task<ActionResult<IEnumerable<LivroModel>>> GetUsuariosCadastrados()
+        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetUsuariosCadastrados()
         {
-            var usuarios = await _livro.ObterLivrosDisponiveis();
-            return Ok(usuarios);
+            var emprestados = await _livro.ObterLivrosDisponiveis();
+            return Ok(emprestados);
         }
 
         [HttpGet("PesquisarLivro")]
@@ -65,7 +65,7 @@ namespace BibliotecaApi.Controllers
         {
             try
             {
-                await _livro.EmprestarLivro(livro);
+                await _livro.CadastrarLivro(livro);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -92,6 +92,20 @@ namespace BibliotecaApi.Controllers
             {
                 return StatusCode(500, "Ocorreu um erro ao devolver o Livro. ID Não existente.");
             }
+        }
+
+        [HttpPost("EmprestarLivro")]
+        public async Task<IActionResult> GetLivroEmprestimo(UserLivroModel emprestimo)
+        {
+            try
+            {
+                await _livro.EmprestarLivro(emprestimo);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Ocorreu um erro ao tentar emprestar um livro.");
+            }
+            return Ok(emprestimo);
         }
     }
 }
