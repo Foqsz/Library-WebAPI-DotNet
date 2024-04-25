@@ -20,7 +20,8 @@ namespace BibliotecaApi.Services
         public string GenerateJwtToken(UsuarioModel user)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-            var issuer = _configuration["Jwt:Emissor"];
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -29,10 +30,10 @@ namespace BibliotecaApi.Services
                 {
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email)
-                    // Adicione mais claims conforme necessário
                 }),
-                Expires = DateTime.UtcNow.AddDays(7), // Tempo de expiração do token (7 dias)
+                Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = issuer,
+                Audience = audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

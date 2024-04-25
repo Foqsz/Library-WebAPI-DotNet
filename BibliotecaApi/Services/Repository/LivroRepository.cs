@@ -17,7 +17,8 @@ namespace BibliotecaApi.Services.Repository
 
         public async Task AtualizarLivros(LivroModel livro)
         {
-            throw new NotImplementedException();
+            _context.Entry(livro).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task DevolverLivro(int id)

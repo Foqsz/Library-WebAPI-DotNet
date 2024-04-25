@@ -40,26 +40,26 @@ namespace BibliotecaApi.Controllers
             } 
         }
 
-        /*
-        [HttpPut("{id} EditarSuasInformacoes")]
-        public async Task<IActionResult> GetLibraryInformation(int id, UsuarioModel usuario)
+        
+        [HttpPut("{id} EditarUmLivro")]
+        public async Task<IActionResult> GetLibraryInformation(int id, LivroModel livro)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound(); 
             }
             try
             {
-                await _usuario.AtualizarUsuario(usuario);
+                await _livro.AtualizarLivros(livro);
+                return Ok(livro);
             }
 
             catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
-            }
-            return Ok(usuario);
+                return StatusCode(500, "Ocorreu um erro ao tentar editar um livro.");
+            } 
         }
-        */
+        
         [HttpPost("Cadastramento")]
         public async Task<IActionResult> GetLivroRegistration(LivroModel livro)
         {

@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using BibliotecaApi.Models;
+using BibliotecaApi.Repositorios.Interfaces;
+using BibliotecaApi.Repository;
+using BibliotecaApi.Services.Interfaces;
+using BibliotecaApi.Services.Repository;
+using BibliotecaApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using BibliotecaApi.Models;
-using BibliotecaApi.Repository;
-using BibliotecaApi.Repositorios.Interfaces;
-using BibliotecaApi.Services;
-using BibliotecaApi.Services.Interfaces;
 using System.Text;
-using BibliotecaApi.Services.Repository;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,20 +25,18 @@ builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddTransient<AuthService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "apiagenda", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
+        Description = "JWT Authorization header using the Bearer scheme",
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme.\r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
 
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -64,47 +60,36 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateAudience = true,
-            ValidAudience = "Audience",
             ValidateIssuer = true,
-            ValidIssuer = "http://localhost:7185",
-            RequireExpirationTime = false,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("abcdefghi12345"))
-        };
-
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = context =>
-            { 
-                var jwtToken = context.SecurityToken as JsonWebToken; 
-                return Task.CompletedTask;
-            }
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"])
+            )
         };
     });
 
-
-builder.Services.AddAuthorization(auth =>
-{
-    auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-        .RequireAuthenticatedUser().Build());
-});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
- 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Agenda V1");
+    });
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization(); 
-
+app.UseAuthorization();
 
 app.MapGet("/test", () => "OK!").RequireAuthorization();
 
