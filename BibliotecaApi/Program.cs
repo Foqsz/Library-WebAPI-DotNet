@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ApiSwagger.SwaggerUtils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +76,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
+/*
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -83,13 +84,16 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Agenda V1");
     });
-}
+}*/
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSwaggerAuthorized();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Agenda V1"));
 
 app.MapGet("/test", () => "OK!").RequireAuthorization();
 
