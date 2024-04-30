@@ -10,6 +10,6 @@ namespace BibliotecaApi.Repositorios.Interfaces
         Task<UsuarioModel> ObterUsuarioPorId(int id);
         Task InserirUsuario(UsuarioModel usuario);
         Task AtualizarUsuario(UsuarioModel usuario);
-        Task ExcluirUsuario(int id);
+        Task ExcluirUsuario(int id); 
     }
 }
