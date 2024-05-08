@@ -47,6 +47,11 @@ namespace BibliotecaApi.Repository
                 _context.Registration.Remove(usuario);
                 await _context.SaveChangesAsync();
             }
-        } 
+        }
+        public async Task ObterUsuarioPorNomeESenha(string name, string senha)
+        {
+            var userSenha = await _context.Registration.FirstOrDefaultAsync(u => u.Name == name && u.Senha == senha);
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using BibliotecaApi.Models;
 using BibliotecaApi.Services.Interfaces;
 using System.Threading.Tasks;
 using BibliotecaApi.Services;
+using BibliotecaApi.Repository;
 
 namespace BibliotecaApi.Controllers
 {
@@ -10,15 +11,16 @@ namespace BibliotecaApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly AuthService _authService; 
 
         public AuthController(AuthService authService)
         {
             _authService = authService;
         }
-
-        [HttpPost("login")]
-        public IActionResult Login()
+         
+        //POST: api/Auth/GerarToken
+        [HttpPost("GerarToken")]
+        public IActionResult GerarToken()
         {
             var user = new UsuarioModel(
                 1,
@@ -30,5 +32,22 @@ namespace BibliotecaApi.Controllers
 
             return Ok(new { token });
         }
+        /*
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignIn(UsuarioModel login)
+        { 
+            if (string.IsNullOrEmpty(login.Name) || string.IsNullOrEmpty(login.Senha))
+            {
+                return BadRequest("Por favor, forneça o nome de usuário e a senha.");
+            }
+             
+            var usuario = await _authService.ObterUsuarioPorNomeESenha(login.Name, login.Senha);
+             
+            if (usuario == null)
+            { 
+                return BadRequest("Nome de usuário ou senha incorretos.");
+            } 
+        }*/
+
     }
 }

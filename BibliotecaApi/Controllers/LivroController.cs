@@ -19,6 +19,7 @@ namespace BibliotecaApi.Controllers
             _livro = livro;
         }
 
+        //GET: /api/Livro/LivrosEmprestados
         [HttpGet("LivrosEmprestados")]
         public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetUsuariosCadastrados()
         {
@@ -26,6 +27,7 @@ namespace BibliotecaApi.Controllers
             return Ok(emprestados);
         }
 
+        //GET: /api/Livro/PesquisarLivro
         [HttpGet("PesquisarLivro")]
         public async Task<ActionResult<IEnumerable<LivroModel>>> GetLibraryPesquisa([FromQuery] string titulo, [FromQuery] string autor, [FromQuery] string genero)
         {
@@ -40,7 +42,7 @@ namespace BibliotecaApi.Controllers
             } 
         }
 
-        
+        //GET: /api/Livro/EditarUmLivro
         [HttpPut("{id} EditarUmLivro")]
         public async Task<IActionResult> GetLibraryInformation(int id, LivroModel livro)
         {
@@ -59,7 +61,8 @@ namespace BibliotecaApi.Controllers
                 return StatusCode(500, "Ocorreu um erro ao tentar editar um livro.");
             } 
         }
-        
+
+        //GET: /api/Livro/Cadastramento
         [HttpPost("Cadastramento")]
         public async Task<IActionResult> GetLivroRegistration(LivroModel livro)
         {
@@ -74,6 +77,7 @@ namespace BibliotecaApi.Controllers
             return Ok(livro);
         }
 
+        //GET: /api/Livro/ManipulacaoDeUsuario
         [HttpDelete("{id} ManipulacaoDeUsuario")]
         public async Task<IActionResult> GetLibraryDelete(int id)
         {
@@ -94,6 +98,7 @@ namespace BibliotecaApi.Controllers
             }
         }
 
+        //GET: /api/Livro/EmprestarLivro
         [HttpPost("EmprestarLivro")]
         public async Task<IActionResult> GetLivroEmprestimo(UserLivroModel emprestimo)
         {

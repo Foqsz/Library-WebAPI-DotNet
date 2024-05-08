@@ -19,14 +19,16 @@ namespace BibliotecaApi.Controllers
             _usuario = usuario;
         }
 
-        [HttpGet("usuarios")]
+        //GET: /api/Usuario/ListarUsuarios
+        [HttpGet("ListarUsuarios")]
         public async Task<ActionResult<IEnumerable<UsuarioModel>>> GetUsuarios()
         {
             var usuarios = await _usuario.ObterUsuariosCadastrados();
             return Ok(usuarios);
         }
 
-        [HttpGet("{id}")]
+        //GET: /api/Usuario/PesquisarUsuario
+        [HttpGet("PesquisarUsuario{id}")]
         public async Task<ActionResult<UsuarioModel>> GetUsuarioPorId(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
@@ -37,7 +39,8 @@ namespace BibliotecaApi.Controllers
             return Ok(usuario);
         }
 
-        [HttpPut("{id}")]
+        //GET: /api/Usuario/AtualizarUsuario
+        [HttpPut("AtualizarUsuario{id}")]
         public async Task<IActionResult> AtualizarUsuario(int id, UsuarioModel usuario)
         {
             if (id != usuario.Id)
@@ -55,7 +58,8 @@ namespace BibliotecaApi.Controllers
             }
         }
 
-        [HttpPost]
+        //GET: /api/Usuario/NovoUsuario
+        [HttpPost("NovoUsuario")]
         public async Task<IActionResult> InserirUsuario(UsuarioModel novoUsuario)
         {
             try
@@ -69,7 +73,8 @@ namespace BibliotecaApi.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        //GET: /api/Usuario/ExcluirUsuario
+        [HttpDelete("ExcluirUsuario{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
             try
