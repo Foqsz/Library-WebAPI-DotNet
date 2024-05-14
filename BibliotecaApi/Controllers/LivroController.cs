@@ -21,16 +21,24 @@ namespace BibliotecaApi.Controllers
 
         //GET: /api/Livro/LivrosEmprestados
         [HttpGet("LivrosEmprestados")]
-        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetUsuariosCadastrados()
+        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLivrosEmprestimosTodos()
         {
-            var emprestados = await _livro.ObterLivrosDisponiveis();
+            var emprestados = await _livro.ObterLivrosEmprestimoDisponiveis();
             return Ok(emprestados);
         }
 
-        //GET: /api/Livro/PesquisarLivro
-        [HttpGet("PesquisarLivro")]
-        public async Task<ActionResult<IEnumerable<LivroModel>>> GetLibraryPesquisa([FromQuery] string titulo, [FromQuery] string autor, [FromQuery] string genero)
+        //GET: /api/Livro/TodosOsLivros
+        [HttpGet("TodosOsLivros")]
+        public async Task<ActionResult<IEnumerable<LivroModel>>> GetLivrosTodos()
         {
+            var emprestados = await _livro.ObterTodosOsLivros();
+            return Ok(emprestados);
+        } 
+
+        //GET: /api/Livro/PesquisarLivroEmprestado
+        [HttpGet("PesquisarLivroEmprestado")]
+        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLibraryPesquisa(string? titulo, string? autor, string? genero)
+        {   
             try
             {
                 var livro = await _livro.PesquisarLivros(titulo, autor, genero);
@@ -40,6 +48,7 @@ namespace BibliotecaApi.Controllers
             {
                 return StatusCode(500, "Não foi possível encontrar esse livro.");
             } 
+
         }
 
         //GET: /api/Livro/EditarUmLivro
