@@ -23,10 +23,10 @@ namespace BibliotecaApi.Services.Repository
 
         public async Task DevolverLivro(int id)
         {
-            var livro = await _context.livroModels.FindAsync(id);
+            var livro = await _context.userLivroEmprestimo.FindAsync(id);
             if (livro != null)
             {
-                _context.livroModels.Remove(livro);
+                _context.userLivroEmprestimo.Remove(livro);
                 await _context.SaveChangesAsync();
             }
         }

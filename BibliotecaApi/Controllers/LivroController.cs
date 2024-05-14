@@ -86,15 +86,10 @@ namespace BibliotecaApi.Controllers
             return Ok(livro);
         }
 
-        //GET: /api/Livro/ManipulacaoDeUsuario
-        [HttpDelete("{id} ManipulacaoDeUsuario")]
+        //GET: /api/Livro/DevolverLivroEmprestado
+        [HttpDelete("{id}DevolverLivroEmprestado")]
         public async Task<IActionResult> GetLibraryDelete(int id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+        {  
             try
             {
                 await _livro.DevolverLivro(id);
