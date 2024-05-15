@@ -52,7 +52,7 @@ namespace BibliotecaApi.Controllers
         }
 
         //GET: /api/Livro/EditarUmLivro
-        [HttpPut("{id} EditarUmLivro")]
+        [HttpPut("EditarUmLivro{id}")]
         public async Task<IActionResult> GetLibraryInformation(int id, LivroModel livro)
         {
             if (id == null)
@@ -87,7 +87,7 @@ namespace BibliotecaApi.Controllers
         }
 
         //GET: /api/Livro/DevolverLivroEmprestado
-        [HttpDelete("{id}DevolverLivroEmprestado")]
+        [HttpDelete("DevolverLivroEmprestado{id}")]
         public async Task<IActionResult> GetLibraryDelete(int id)
         {  
             try
