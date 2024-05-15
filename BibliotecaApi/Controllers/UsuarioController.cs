@@ -28,7 +28,7 @@ namespace BibliotecaApi.Controllers
         }
 
         //GET: /api/Usuario/PesquisarUsuario
-        [HttpGet("PesquisarUsuario{id}")]
+        [HttpGet("PesquisarUsuario/{id}")]
         public async Task<ActionResult<UsuarioModel>> GetUsuarioPorId(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
@@ -39,8 +39,8 @@ namespace BibliotecaApi.Controllers
             return Ok(usuario);
         }
 
-        //GET: /api/Usuario/AtualizarUsuario
-        [HttpPut("AtualizarUsuario{id}")]
+        //GET: /api/Usuario/AtualizarUsuario/id
+        [HttpPut("AtualizarUsuario/{id}")]
         public async Task<IActionResult> AtualizarUsuario(int id, UsuarioModel usuario)
         {
             if (id != usuario.Id)
@@ -73,8 +73,8 @@ namespace BibliotecaApi.Controllers
             }
         }
 
-        //GET: /api/Usuario/ExcluirUsuario
-        [HttpDelete("ExcluirUsuario{id}")]
+        //GET: /api/Usuario/ExcluirUsuario/id
+        [HttpDelete("ExcluirUsuario/{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
             try
