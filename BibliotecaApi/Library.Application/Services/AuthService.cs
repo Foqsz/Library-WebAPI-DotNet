@@ -1,4 +1,5 @@
 ﻿using BibliotecaApi.Library.Core.Model;
+using BibliotecaApi.Library.API;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,7 +20,14 @@ namespace BibliotecaApi.Library.Application.Services
 
         public string GenerateJwtToken(UsuarioModel user)
         {
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            var jwtKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                throw new ArgumentNullException("JWT Key is missing or empty in configuration.");
+            }
+
+            var key = Encoding.UTF8.GetBytes(jwtKey);
+
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
 

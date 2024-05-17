@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using BibliotecaApi.Library.Application.Interfaces;
+using BibliotecaApi.Library.Application.Services;
+using BibliotecaApi.Library.Infrastructure.Data;
+using BibliotecaApi.Library.Infrastructure.Repository;
+using BibliotecaApi.Library.Application;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using BibliotecaApi.Library.Application.Services;
-using BibliotecaApi.Library.Application.Interfaces;
-using BibliotecaApi.Library.Infrastructure.Data;
-using BibliotecaApi.Library.Infrastructure.Repository;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(AppContext.BaseDirectory, "Library.API"))
     .AddJsonFile("appsettings.json")
-    .Build();
-
+    .Build(); 
 
 // Adicionar serviços ao contêiner.
 builder.Services.AddControllers();
@@ -81,7 +82,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Agenda V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibliotecaApi v1");
     });
 }
 
@@ -89,7 +90,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization(); 
+app.UseAuthorization();
 
 app.MapGet("/test", () => "OK!").RequireAuthorization();
 
