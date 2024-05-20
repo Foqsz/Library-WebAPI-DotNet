@@ -3,11 +3,21 @@
     "BibliotecaApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7185",
+      "launchUrl": "https://localhost:7185/swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:7185"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:7185/swagger/index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://localhost:7185"
+      },
+      "distributionName": ""
     }
   }
 }

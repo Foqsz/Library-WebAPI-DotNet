@@ -21,10 +21,6 @@ namespace BibliotecaApi.Library.Application.Services
         public string GenerateJwtToken(UsuarioModel user)
         {
             var jwtKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                throw new ArgumentNullException("JWT Key is missing or empty in configuration.");
-            }
 
             var key = Encoding.UTF8.GetBytes(jwtKey);
 
