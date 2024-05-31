@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Carregar a configuração do arquivo appsettings.json
 var configuration = new ConfigurationBuilder()
-    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "Library.API"))
+    //.SetBasePath(Path.Combine(AppContext.BaseDirectory, "Library.API"))
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 

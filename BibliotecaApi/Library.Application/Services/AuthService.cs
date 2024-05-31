@@ -1,5 +1,4 @@
 ﻿using BibliotecaApi.Library.Core.Model;
-using BibliotecaApi.Library.API;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,6 +20,11 @@ namespace BibliotecaApi.Library.Application.Services
         public string GenerateJwtToken(UsuarioModel user)
         {
             var jwtKey = _configuration["Jwt:Key"];
+
+            if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 32)
+            {
+                throw new ArgumentOutOfRangeException("A chave JWT deve ter pelo menos 256 bits (32 caracteres).");
+            }
 
             var key = Encoding.UTF8.GetBytes(jwtKey);
 
