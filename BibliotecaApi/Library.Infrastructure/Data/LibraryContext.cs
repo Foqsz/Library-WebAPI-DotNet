@@ -1,10 +1,12 @@
-﻿using BibliotecaApi.Library.Core.Model;
-using BibliotecaApi.Library.Infrastructure.Data.Map;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using BibliotecaApi.Library.Core.Model;
+using BibliotecaApi.Library.Infrastructure.Data.Map;
+using WebApiCatalogo.Catalogo.Core.Model;
 
 namespace BibliotecaApi.Library.Infrastructure.Data
 {
-    public class LibraryContext : DbContext
+    public class LibraryContext : IdentityDbContext<LibraryUser>
     {
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
         {
