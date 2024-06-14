@@ -6,8 +6,7 @@ using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 
 namespace BibliotecaApi.Library.API.Controllers
-{
-    [Authorize]
+{  
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
