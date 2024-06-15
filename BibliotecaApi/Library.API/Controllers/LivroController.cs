@@ -7,8 +7,9 @@ using WebApiCatalogo.Catalogo.API.Controllers;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     [ApiController]
+    [Authorize]
     public class LivroController : ControllerBase
     {
         private readonly ILivroRepository _livro;  
@@ -31,7 +32,7 @@ namespace BibliotecaApi.Library.API.Controllers
         //GET: /api/Livro/TodosOsLivros
         [HttpGet]
         [Route("TodosOsLivros")]
-        [Authorize(Policy = "UserOnly")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<LivroModel>>> GetLivrosTodos()
         {
             var emprestados = await _livro.ObterTodosOsLivros();

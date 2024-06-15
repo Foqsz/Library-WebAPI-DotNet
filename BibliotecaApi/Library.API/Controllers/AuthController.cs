@@ -205,8 +205,7 @@ namespace WebApiCatalogo.Catalogo.API.Controllers
                 refreshToken = newRefreshToken
             });
         }
-
-        [Authorize]
+         
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -222,7 +221,7 @@ namespace WebApiCatalogo.Catalogo.API.Controllers
 
             await _userManager.UpdateAsync(user);
 
-            return NoContent();
+            return Ok("Execução realizada com sucesso.");
         }
          
     }

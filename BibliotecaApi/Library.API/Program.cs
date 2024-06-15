@@ -20,6 +20,32 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("ConexaoPadrao")));
 
+
+var secretKey = builder.Configuration["JWT:SecretKey"]
+                    ?? throw new ArgumentException("Erro! Invalid secret key!");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
@@ -86,8 +112,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapGet("/test", () => "OK!").RequireAuthorization();
+ 
 
 app.MapControllers();
 
