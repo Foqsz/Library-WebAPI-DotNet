@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
+using WebApiCatalogo.Catalogo.API.Controllers;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -10,7 +11,7 @@ namespace BibliotecaApi.Library.API.Controllers
     [ApiController]
     public class LivroController : ControllerBase
     {
-        private readonly ILivroRepository _livro;
+        private readonly ILivroRepository _livro;  
 
         public LivroController(ILivroRepository livro)
         {
@@ -18,7 +19,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/LivrosEmprestados
-        [HttpGet("LivrosEmprestados")]
+        [HttpGet]
+        [Route("LivrosEmprestados")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLivrosEmprestimosTodos()
         {
             var emprestados = await _livro.ObterLivrosEmprestimoDisponiveis();
@@ -26,7 +29,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/TodosOsLivros
-        [HttpGet("TodosOsLivros")]
+        [HttpGet]
+        [Route("TodosOsLivros")]
+        [Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<LivroModel>>> GetLivrosTodos()
         {
             var emprestados = await _livro.ObterTodosOsLivros();
@@ -34,7 +39,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/PesquisarLivroEmprestado
-        [HttpGet("PesquisarLivroEmprestado")]
+        [HttpGet]
+        [Route("PesquisarLivroEmprestado")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLibraryPesquisa(string? titulo, string? autor, string? genero)
         {
             try
@@ -50,7 +57,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/EditarUmLivro/id
-        [HttpPut("EditarUmLivro/{id}")]
+        [HttpPut]
+        [Route("EditarUmLivro/{id}")]
+        //[Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> GetLibraryInformation(int id, LivroModel livro)
         {
             if (id == null)
@@ -70,7 +79,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/Cadastramento
-        [HttpPost("Cadastramento")]
+        [HttpPost]
+        [Route("Cadastramento")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<IActionResult> GetLivroRegistration(LivroModel livro)
         {
             try
@@ -85,7 +96,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/DevolverLivroEmprestado/id
-        [HttpDelete("DevolverLivroEmprestado/{id}")]
+        [HttpDelete]
+        [Route("DevolverLivroEmprestado/{id}")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<IActionResult> GetLibraryDelete(int id)
         {
             try
@@ -101,7 +114,9 @@ namespace BibliotecaApi.Library.API.Controllers
         }
 
         //GET: /api/Livro/EmprestarLivro
-        [HttpPost("EmprestarLivro")]
+        [HttpPost]
+        [Route("EmprestarLivro")]
+        //[Authorize(Policy = "UserOnly")]
         public async Task<IActionResult> GetLivroEmprestimo(UserLivroModel emprestimo)
         {
             try

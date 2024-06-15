@@ -20,6 +20,18 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("ConexaoPadrao")));
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("SuperAdmin", policy => policy.RequireRole("Admin").RequireClaim("id", "Foqs"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+    options.AddPolicy("ExclusivePolicyOnly", policy =>
+                      policy.RequireAssertion(context =>
+                      context.User.HasClaim(claim =>
+                      claim.Type == "id" && claim.Value == "Foqs") || context.User.IsInRole("SuperAdmin")));
+
+});
+
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddTransient<AuthService>();
@@ -57,8 +69,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 }); 
-
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
