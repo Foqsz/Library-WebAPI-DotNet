@@ -94,7 +94,9 @@ builder.Services.AddSwaggerGen(c =>
             new string[] {}
         }
     });
-}); 
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

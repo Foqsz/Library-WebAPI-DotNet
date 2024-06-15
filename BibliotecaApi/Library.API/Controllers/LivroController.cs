@@ -8,8 +8,7 @@ using WebApiCatalogo.Catalogo.API.Controllers;
 namespace BibliotecaApi.Library.API.Controllers
 {  
     [Route("api/[controller]")] 
-    [ApiController]
-    [Authorize]
+    [ApiController] 
     public class LivroController : ControllerBase
     {
         private readonly ILivroRepository _livro;  
@@ -19,7 +18,7 @@ namespace BibliotecaApi.Library.API.Controllers
             _livro = livro;
         }
 
-        //GET: /api/Livro/LivrosEmprestados
+        //GET: /api/Livro/LivrosEmprestados  
         [HttpGet]
         [Route("LivrosEmprestados")]
         //[Authorize(Policy = "UserOnly")]
