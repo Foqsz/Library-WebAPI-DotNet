@@ -1,4 +1,5 @@
-﻿using BibliotecaApi.Library.Application.Interfaces;
+﻿using BibliotecaApi.Library.Application.DTOs.Mappings;
+using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Application.Services;
 using BibliotecaApi.Library.Infrastructure.Data;
 using BibliotecaApi.Library.Infrastructure.Repository;
@@ -62,6 +63,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddTransient<AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAutoMapper(typeof(UsuarioDTOMappingProfile));
 
 builder.Services.AddIdentity<LibraryUser, IdentityRole>()
     .AddEntityFrameworkStores<LibraryContext>()

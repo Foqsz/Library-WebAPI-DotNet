@@ -1,4 +1,5 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
+using BibliotecaApi.Library.Application.DTOs;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 using BibliotecaApi.Library.Infrastructure.Data;
@@ -18,14 +19,14 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<UsuarioModel>> ObterUsuariosCadastrados()
+        public async Task<IEnumerable<UsuarioModelDTO>> ObterUsuariosCadastrados()
         {
-            return await _context.Registration.ToListAsync();
+            return await _context.Registration.Select(u => new UsuarioModelDTO { Id = u.Id, Email = u.Email, Name = u.Name }).ToListAsync();
         }
 
-        public async Task<UsuarioModel> ObterUsuarioPorId(int id)
+        public async Task<UsuarioModelDTO> ObterUsuarioPorId(int id)
         {
-            return await _context.Registration.FindAsync(id);
+            return await _context.Registration.Where(u => u.Id == id).Select(u => new UsuarioModelDTO { Id = u.Id, Email = u.Email, Name = u.Name }).FirstOrDefaultAsync();
         }
 
         public async Task InserirUsuario(UsuarioModel usuario)

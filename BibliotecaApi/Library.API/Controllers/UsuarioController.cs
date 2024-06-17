@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
+using BibliotecaApi.Library.Application.DTOs;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -20,7 +21,7 @@ namespace BibliotecaApi.Library.API.Controllers
 
         //GET: /api/Usuario/ListarUsuarios
         [HttpGet("ListarUsuarios")]
-        public async Task<ActionResult<IEnumerable<UsuarioModel>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<UsuarioModelDTO>>> GetUsuarios()
         {
             var usuarios = await _usuario.ObterUsuariosCadastrados();
             return Ok(usuarios);
@@ -28,7 +29,7 @@ namespace BibliotecaApi.Library.API.Controllers
 
         //GET: /api/Usuario/PesquisarUsuario
         [HttpGet("PesquisarUsuario/{id}")]
-        public async Task<ActionResult<UsuarioModel>> GetUsuarioPorId(int id)
+        public async Task<ActionResult<UsuarioModelDTO>> GetUsuarioPorId(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
             if (usuario == null)
@@ -74,7 +75,7 @@ namespace BibliotecaApi.Library.API.Controllers
 
         //GET: /api/Usuario/ExcluirUsuario/id
         [HttpDelete("ExcluirUsuario/{id}")]
-        public async Task<IActionResult> ExcluirUsuario(int id)
+        public async Task<ActionResult<UsuarioModelDTO>> ExcluirUsuario(int id)
         {
             try
             {
