@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 using WebApiCatalogo.Catalogo.API.Controllers;
+using BibliotecaApi.Library.Application.DTOs;
+using AutoMapper;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -22,7 +24,7 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpGet]
         [Route("LivrosEmprestados")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLivrosEmprestimosTodos()
+        public async Task<ActionResult<IEnumerable<UserLivroModelDTO>>> GetLivrosEmprestimosTodos()
         {
             var emprestados = await _livro.ObterLivrosEmprestimoDisponiveis();
             return Ok(emprestados);
@@ -32,7 +34,7 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpGet]
         [Route("TodosOsLivros")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<ActionResult<IEnumerable<LivroModel>>> GetLivrosTodos()
+        public async Task<ActionResult<IEnumerable<LivroModelDTO>>> GetLivrosTodos()
         {
             var emprestados = await _livro.ObterTodosOsLivros();
             return Ok(emprestados);
@@ -42,7 +44,7 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpGet]
         [Route("PesquisarLivroEmprestado")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<ActionResult<IEnumerable<UserLivroModel>>> GetLibraryPesquisa(string? titulo, string? autor, string? genero)
+        public async Task<ActionResult<IEnumerable<UserLivroModelDTO>>> GetLibraryPesquisa(string? titulo, string? autor, string? genero)
         {
             try
             {
@@ -60,7 +62,7 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpPut]
         [Route("EditarUmLivro/{id}")]
         //[Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> GetLibraryInformation(int id, LivroModel livro)
+        public async Task<ActionResult<LivroModelDTO>> GetLibraryInformation(int id, LivroModelDTO livroDto)
         {
             if (id == null)
             {
@@ -68,8 +70,8 @@ namespace BibliotecaApi.Library.API.Controllers
             }
             try
             {
-                await _livro.AtualizarLivros(livro);
-                return Ok(livro);
+                await _livro.AtualizarLivros(livroDto);
+                return Ok(livroDto);
             }
 
             catch (DbUpdateConcurrencyException)
@@ -82,24 +84,24 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpPost]
         [Route("Cadastramento")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<IActionResult> GetLivroRegistration(LivroModel livro)
+        public async Task<ActionResult<LivroModelDTO>> GetLivroRegistration(LivroModelDTO livroDto)
         {
             try
             {
-                await _livro.CadastrarLivro(livro);
+                await _livro.CadastrarLivro(livroDto);
             }
             catch (DbUpdateConcurrencyException)
             {
                 return StatusCode(500, "Ocorreu um erro ao tentar cadastrar um novo livro.");
             }
-            return Ok(livro);
+            return Ok(livroDto);
         }
 
         //GET: /api/Livro/DevolverLivroEmprestado/id
         [HttpDelete]
         [Route("DevolverLivroEmprestado/{id}")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<IActionResult> GetLibraryDelete(int id)
+        public async Task<ActionResult<LivroModelDTO>> GetLibraryDelete(int id)
         {
             try
             {
@@ -117,17 +119,17 @@ namespace BibliotecaApi.Library.API.Controllers
         [HttpPost]
         [Route("EmprestarLivro")]
         //[Authorize(Policy = "UserOnly")]
-        public async Task<IActionResult> GetLivroEmprestimo(UserLivroModel emprestimo)
+        public async Task<ActionResult> GetLivroEmprestimo(UserLivroModelDTO emprestimoDto)
         {
             try
             {
-                await _livro.EmprestarLivro(emprestimo);
+                await _livro.EmprestarLivro(emprestimoDto);
             }
             catch (DbUpdateConcurrencyException)
             {
                 return StatusCode(500, "Ocorreu um erro ao tentar emprestar um livro.");
             }
-            return Ok(emprestimo);
+            return Ok(emprestimoDto);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Amazon.Auth.AccessControlPolicy;
+﻿using AutoMapper;
 using BibliotecaApi.Library.Application.DTOs;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
@@ -13,6 +13,7 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly LibraryContext _context;
+        private readonly IMapper _mapper;
 
         public UsuarioRepository(LibraryContext context)
         {
@@ -20,7 +21,7 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
         }
 
         public async Task<IEnumerable<UsuarioModelDTO>> ObterUsuariosCadastrados()
-        {
+        { 
             return await _context.Registration.Select(u => new UsuarioModelDTO { Id = u.Id, Email = u.Email, Name = u.Name }).ToListAsync();
         }
 

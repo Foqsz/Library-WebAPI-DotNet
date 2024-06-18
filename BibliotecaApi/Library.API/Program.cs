@@ -64,6 +64,8 @@ builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddTransient<AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAutoMapper(typeof(UsuarioDTOMappingProfile));
+builder.Services.AddAutoMapper(typeof(LivroDTOMappingProfile));
+builder.Services.AddAutoMapper(typeof(UserModelDTOMappingProfile));
 
 builder.Services.AddIdentity<LibraryUser, IdentityRole>()
     .AddEntityFrameworkStores<LibraryContext>()

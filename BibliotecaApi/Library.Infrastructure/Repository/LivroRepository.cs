@@ -1,7 +1,9 @@
-﻿using BibliotecaApi.Library.Application.Interfaces;
+﻿using BibliotecaApi.Library.Application.DTOs;
+using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 using BibliotecaApi.Library.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace BibliotecaApi.Library.Infrastructure.Repository
 {
@@ -9,40 +11,62 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
     {
 
         private readonly LibraryContext _context;
+        private readonly IMapper _mapper;
 
-        public LivroRepository(LibraryContext context)
+        public LivroRepository(LibraryContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task AtualizarLivros(LivroModel livro)
+        public async Task AtualizarLivros(LivroModelDTO livroDto)
         {
+            var livro = _mapper.Map<LivroModel>(livroDto);
             _context.Entry(livro).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
-        public async Task DevolverLivro(int id)
+        public async Task DevolverLivro(int livroId)
         {
-            var livro = await _context.userLivroEmprestimo.FindAsync(id);
+            var livro = await _context.userLivroEmprestimo.FirstOrDefaultAsync(l => l.Id == livroId);
+
             if (livro != null)
             {
                 _context.userLivroEmprestimo.Remove(livro);
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                throw new InvalidOperationException("Livro não encontrado.");
+            }
         }
 
-        public async Task CadastrarLivro(LivroModel livro)
+
+        public async Task CadastrarLivro(LivroModelDTO livroDto)
         {
-            _context.livroModels.Add(livro);
-            await _context.SaveChangesAsync();
+            bool livroExistente = await _context.livroModels.AnyAsync(l => l.Titulo == livroDto.Titulo);
+
+            if (!livroExistente)
+            {
+                var livroAdd = _mapper.Map<LivroModel>(livroDto);
+                _context.livroModels.Add(livroAdd);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Livro já cadastrado.");
+            }
         }
 
-        public async Task<IEnumerable<UserLivroModel>> ObterLivrosEmprestimoDisponiveis()
+
+        public async Task<IEnumerable<UserLivroModelDTO>> ObterLivrosEmprestimoDisponiveis()
         {
-            return await _context.userLivroEmprestimo.ToListAsync();
+            var userLivroModels = await _context.userLivroEmprestimo.ToListAsync();
+            var dtos = _mapper.Map<List<UserLivroModelDTO>>(userLivroModels);
+            return dtos;
         }
 
-        public async Task<IEnumerable<UserLivroModel>> PesquisarLivros(string? titulo, string? autor, string? genero)
+        public async Task<IEnumerable<UserLivroModelDTO>> PesquisarLivros(string? titulo, string? autor, string? genero)
         {
             var query = _context.userLivroEmprestimo.AsQueryable();
 
@@ -61,20 +85,32 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
                 query = query.Where(l => l.Genero.Contains(genero));
             }
 
-            return await query.ToListAsync();
+            var userLivroModels = await query.ToListAsync();
+            var queryDto = _mapper.Map<List<UserLivroModelDTO>>(userLivroModels);
+            return queryDto;
         }
 
-
-        public async Task EmprestarLivro(UserLivroModel emprestimo)
+        public async Task EmprestarLivro(UserLivroModelDTO emprestimo)
         {
-            _context.userLivroEmprestimo.Add(emprestimo);
-            await _context.SaveChangesAsync();
+            bool livroExistente = await _context.livroModels.AnyAsync(l => l.Titulo == emprestimo.NomeLivro);
+
+            if (!livroExistente)
+            {
+                var userLivroModel = _mapper.Map<UserLivroModel>(emprestimo);
+                _context.userLivroEmprestimo.Add(userLivroModel);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Livro já emprestado.");
+            }
         }
 
-        public async Task<IEnumerable<LivroModel>> ObterTodosOsLivros()
+        public async Task<IEnumerable<LivroModelDTO>> ObterTodosOsLivros()
         {
-            return await _context.livroModels.ToListAsync();
-
+            var livroModels = await _context.livroModels.ToListAsync();
+            var livroDtos = _mapper.Map<List<LivroModelDTO>>(livroModels);
+            return livroDtos;
         }
     }
 }

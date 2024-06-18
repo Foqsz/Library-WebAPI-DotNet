@@ -1,10 +1,9 @@
-﻿using Amazon;
-using AutoMapper;
+﻿using AutoMapper;
 using BibliotecaApi.Library.Core.Model;
 
 namespace BibliotecaApi.Library.Application.DTOs.Mappings
 {
-    public class UsuarioDTOMappingProfile : AutoMapper.Profile
+    public class UsuarioDTOMappingProfile : Profile
     { 
         public UsuarioDTOMappingProfile()
         {
