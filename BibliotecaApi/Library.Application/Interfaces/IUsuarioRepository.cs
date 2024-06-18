@@ -9,8 +9,8 @@ namespace BibliotecaApi.Library.Application.Interfaces
     {
         Task<IEnumerable<UsuarioModelDTO>> ObterUsuariosCadastrados();
         Task<UsuarioModelDTO> ObterUsuarioPorId(int id);
-        Task InserirUsuario(UsuarioModel usuario);
-        Task AtualizarUsuario(UsuarioModel usuario);
+        Task InserirUsuario(UsuarioModelDTO usuario);
+        Task AtualizarUsuario(UsuarioModelDTO usuario);
         Task ExcluirUsuario(int id);
     }
 }

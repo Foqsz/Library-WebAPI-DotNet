@@ -15,45 +15,78 @@ namespace BibliotecaApi.Library.Infrastructure.Repository
         private readonly LibraryContext _context;
         private readonly IMapper _mapper;
 
-        public UsuarioRepository(LibraryContext context)
+        public UsuarioRepository(LibraryContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<UsuarioModelDTO>> ObterUsuariosCadastrados()
-        { 
-            return await _context.Registration.Select(u => new UsuarioModelDTO { Id = u.Id, Email = u.Email, Name = u.Name }).ToListAsync();
+        {
+            var userCadastrados = await _context.Registration.ToListAsync();
+            var users = _mapper.Map<List<UsuarioModelDTO>>(userCadastrados);
+            return users;
         }
 
         public async Task<UsuarioModelDTO> ObterUsuarioPorId(int id)
         {
-            return await _context.Registration.Where(u => u.Id == id).Select(u => new UsuarioModelDTO { Id = u.Id, Email = u.Email, Name = u.Name }).FirstOrDefaultAsync();
-        }
-
-        public async Task InserirUsuario(UsuarioModel usuario)
-        {
-            _context.Registration.Add(usuario);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AtualizarUsuario(UsuarioModel usuario)
-        {
-            _context.Entry(usuario).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task ExcluirUsuario(int id)
-        {
             var usuario = await _context.Registration.FindAsync(id);
+
+            if (usuario != null)
+            {
+                var usuarioDto = _mapper.Map<UsuarioModelDTO>(usuario);
+                return usuarioDto;
+            }
+            else
+            {
+                throw new InvalidOperationException("Usuário não encontrado.");
+            }
+        }
+
+
+        public async Task InserirUsuario(UsuarioModelDTO usuarioDto)
+        {
+            // Verifica se já existe um usuário com o mesmo nome
+            bool usuarioExistente = await _context.Registration.AnyAsync(u => u.Name == usuarioDto.Name);
+
+            if (!usuarioExistente)
+            {
+                // Mapeia UsuarioModelDTO para UsuarioModel
+                var usuarioModel = _mapper.Map<UsuarioModel>(usuarioDto);
+
+                // Adiciona o novo usuário ao contexto
+                _context.Registration.Add(usuarioModel);
+
+                // Salva as mudanças no banco de dados
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Usuário já cadastrado.");
+            }
+        }
+
+
+        public async Task AtualizarUsuario(UsuarioModelDTO usuarioDto)
+        {
+            var attUser = _mapper.Map<UsuarioModel>(usuarioDto);
+            _context.Entry(attUser).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ExcluirUsuario(int userId)
+        {
+            var usuario = await _context.Registration.FirstOrDefaultAsync(u => u.Id == userId);
+
             if (usuario != null)
             {
                 _context.Registration.Remove(usuario);
                 await _context.SaveChangesAsync();
             }
-        }
-        public async Task ObterUsuarioPorNomeESenha(string name, string senha)
-        {
-            var userSenha = await _context.Registration.FirstOrDefaultAsync(u => u.Name == name && u.Senha == senha);
+            else
+            {
+                throw new InvalidOperationException("Usuário não encontrado.");
+            }
         }
 
     }

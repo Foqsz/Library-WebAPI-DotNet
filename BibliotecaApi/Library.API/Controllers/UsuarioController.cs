@@ -41,9 +41,9 @@ namespace BibliotecaApi.Library.API.Controllers
 
         //GET: /api/Usuario/AtualizarUsuario/id
         [HttpPut("AtualizarUsuario/{id}")]
-        public async Task<IActionResult> AtualizarUsuario(int id, UsuarioModel usuario)
+        public async Task<ActionResult<UsuarioModelDTO>> AtualizarUsuario(int id, UsuarioModelDTO usuario)
         {
-            if (id != usuario.Id)
+            if (id == null)
             {
                 return BadRequest("ID do usuário na rota não corresponde ao ID do usuário no corpo da requisição.");
             }
@@ -60,17 +60,17 @@ namespace BibliotecaApi.Library.API.Controllers
 
         //GET: /api/Usuario/NovoUsuario
         [HttpPost("NovoUsuario")]
-        public async Task<IActionResult> InserirUsuario(UsuarioModel novoUsuario)
+        public async Task<ActionResult<UsuarioModelDTO>> InserirUsuario(UsuarioModelDTO novoUsuario)
         {
             try
             {
-                await _usuario.InserirUsuario(novoUsuario);
-                return CreatedAtAction(nameof(GetUsuarioPorId), new { id = novoUsuario.Id }, novoUsuario);
+                await _usuario.InserirUsuario(novoUsuario); 
             }
             catch (DbUpdateConcurrencyException)
             {
                 return StatusCode(500, "Ocorreu um erro ao tentar inserir o usuário.");
             }
+            return Ok(novoUsuario);
         }
 
         //GET: /api/Usuario/ExcluirUsuario/id

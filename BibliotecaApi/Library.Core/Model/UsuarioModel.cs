@@ -15,13 +15,6 @@ namespace BibliotecaApi.Library.Core.Model
 
         [Required(ErrorMessage = "Digite sua senha.")]
         public string Senha { get; set; }
-
-        public UsuarioModel(int id, string name, string email, string senha)
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-            Senha = senha;
-        }
+         
     }
 }
