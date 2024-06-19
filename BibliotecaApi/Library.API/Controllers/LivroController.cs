@@ -13,11 +13,13 @@ namespace BibliotecaApi.Library.API.Controllers
     [ApiController] 
     public class LivroController : ControllerBase
     {
-        private readonly ILivroRepository _livro;  
+        private readonly ILivroRepository _livro;
+        private readonly IMapper _mapper;
 
-        public LivroController(ILivroRepository livro)
+        public LivroController(ILivroRepository livro, IMapper mapper)
         {
             _livro = livro;
+            _mapper = mapper;
         }
 
         //GET: /api/Livro/LivrosEmprestados  
@@ -27,7 +29,10 @@ namespace BibliotecaApi.Library.API.Controllers
         public async Task<ActionResult<IEnumerable<UserLivroModelDTO>>> GetLivrosEmprestimosTodos()
         {
             var emprestados = await _livro.ObterLivrosEmprestimoDisponiveis();
-            return Ok(emprestados);
+
+            var emprestadosDto = _mapper.Map<IEnumerable<UserLivroModel>>(emprestados);
+
+            return Ok(emprestadosDto);
         }
 
         //GET: /api/Livro/TodosOsLivros
@@ -36,8 +41,11 @@ namespace BibliotecaApi.Library.API.Controllers
         //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<LivroModelDTO>>> GetLivrosTodos()
         {
-            var emprestados = await _livro.ObterTodosOsLivros();
-            return Ok(emprestados);
+            var todosLivros = await _livro.ObterTodosOsLivros();
+
+            var todosLivrosDto = _mapper.Map<IEnumerable<LivroModel>>(todosLivros);
+
+            return Ok(todosLivrosDto);
         }
 
         //GET: /api/Livro/PesquisarLivroEmprestado

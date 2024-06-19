@@ -5,6 +5,7 @@ using System;
 using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 using BibliotecaApi.Library.Application.DTOs;
+using AutoMapper;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -13,10 +14,12 @@ namespace BibliotecaApi.Library.API.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _usuario;
+        private readonly IMapper _mapper;
 
-        public UsuarioController(IUsuarioRepository usuario)
+        public UsuarioController(IUsuarioRepository usuario, IMapper mapper)
         {
             _usuario = usuario;
+            _mapper = mapper;
         }
 
         //GET: /api/Usuario/ListarUsuarios
@@ -24,7 +27,10 @@ namespace BibliotecaApi.Library.API.Controllers
         public async Task<ActionResult<IEnumerable<UsuarioModelDTO>>> GetUsuarios()
         {
             var usuarios = await _usuario.ObterUsuariosCadastrados();
-            return Ok(usuarios);
+
+            var usuariosDto = _mapper.Map<IEnumerable<UsuarioModel>>(usuarios);
+
+            return Ok(usuariosDto);
         }
 
         //GET: /api/Usuario/PesquisarUsuario
@@ -36,7 +42,10 @@ namespace BibliotecaApi.Library.API.Controllers
             {
                 return NotFound($"Usuário com ID {id} não encontrado.");
             }
-            return Ok(usuario);
+
+            var usuarioDto = _mapper.Map<IEnumerable<UsuarioModel>>(usuario);
+
+            return Ok(usuarioDto);
         }
 
         //GET: /api/Usuario/AtualizarUsuario/id
