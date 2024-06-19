@@ -22,6 +22,16 @@ builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("ConexaoPadrao")));
 
 
+var origensComAcessoPermitido = "_origensComAcessoPermitido";
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(name: origensComAcessoPermitido,
+    policy =>
+    {
+        policy.WithOrigins("https://apirequest.io");
+    })
+);
+
 var secretKey = builder.Configuration["JWT:SecretKey"]
                     ?? throw new ArgumentException("Erro! Invalid secret key!");
 
@@ -115,6 +125,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors(origensComAcessoPermitido);
 
 app.UseAuthentication();
 app.UseAuthorization();
