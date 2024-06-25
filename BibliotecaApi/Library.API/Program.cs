@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using WebApiCatalogo.Catalogo.Core.Model;
 
@@ -84,7 +85,30 @@ builder.Services.AddIdentity<LibraryUser, IdentityRole>()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BibliotecaApi", Version = "v1" });
+    //c.SwaggerDoc("v1", new OpenApiInfo { Title = "BibliotecaApi", Version = "v1" });
+
+    c.SwaggerDoc("v1", new OpenApiInfo()
+    {
+        Version = "v1",
+        Title = "LibraryWebApi",
+        Description = "Api de Gerenciamento de Biblioteca",
+        TermsOfService = new Uri("https://foqsz.github.io/"),
+        Contact = new OpenApiContact
+        {
+            Name = "Victor Vinicius",
+            Email = "contatovictorvinicius05@gmail.com",
+            Url = new Uri("https://foqsz.github.io/"),
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Usar sobre LICX",
+            Url = new Uri("https://foqsz.github.io/"),
+        }
+    });
+
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
@@ -130,7 +154,7 @@ app.UseCors(origensComAcessoPermitido);
 
 app.UseAuthentication();
 app.UseAuthorization();
- 
+
 
 app.MapControllers();
 

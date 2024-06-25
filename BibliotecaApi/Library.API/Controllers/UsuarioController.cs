@@ -6,6 +6,7 @@ using BibliotecaApi.Library.Application.Interfaces;
 using BibliotecaApi.Library.Core.Model;
 using BibliotecaApi.Library.Application.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -22,6 +23,10 @@ namespace BibliotecaApi.Library.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Listar todos os usuários cadastrados
+        /// </summary>
+        /// <returns>Lista de usuários cadastrados</returns>
         //GET: /api/Usuario/ListarUsuarios
         [HttpGet("ListarUsuarios")]
         public async Task<ActionResult<IEnumerable<UsuarioModelDTO>>> GetUsuarios()
@@ -33,8 +38,16 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(usuariosDto);
         }
 
+        /// <summary>
+        /// Pesquisa usuário pelo ID
+        /// </summary>
+        /// <param name="id">objeto usuario</param>
+        /// <returns>Retorna um usuário pelo ID</returns>
         //GET: /api/Usuario/PesquisarUsuario
         [HttpGet("PesquisarUsuario/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<UsuarioModelDTO>> GetUsuarioPorId(int id)
         {
             var usuario = await _usuario.ObterUsuarioPorId(id);
@@ -48,8 +61,18 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(usuarioDto);
         }
 
+        /// <summary>
+        /// Atualizar um usuário
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="usuario"></param>
+        /// <returns>Retorna um usuário atualizado</returns>
         //GET: /api/Usuario/AtualizarUsuario/id
         [HttpPut("AtualizarUsuario/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<UsuarioModelDTO>> AtualizarUsuario(int id, UsuarioModelDTO usuario)
         {
             if (id == null)
@@ -66,9 +89,17 @@ namespace BibliotecaApi.Library.API.Controllers
                 return StatusCode(500, "Ocorreu um erro ao tentar atualizar o usuário.");
             }
         }
-
+        
+        /// <summary>
+        /// Cadastra um novo usuário
+        /// </summary>
+        /// <param name="novoUsuario"></param>
+        /// <returns>Retorna um usuário cadastrado</returns>
         //GET: /api/Usuario/NovoUsuario
         [HttpPost("NovoUsuario")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<UsuarioModelDTO>> InserirUsuario(UsuarioModelDTO novoUsuario)
         {
             try
@@ -82,8 +113,16 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(novoUsuario);
         }
 
+        /// <summary>
+        /// Deletar um usuário
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Retorna um usuário deletado</returns>
         //GET: /api/Usuario/ExcluirUsuario/id
         [HttpDelete("ExcluirUsuario/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<UsuarioModelDTO>> ExcluirUsuario(int id)
         {
             try

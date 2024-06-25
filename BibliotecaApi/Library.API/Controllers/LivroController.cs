@@ -6,6 +6,7 @@ using BibliotecaApi.Library.Core.Model;
 using WebApiCatalogo.Catalogo.API.Controllers;
 using BibliotecaApi.Library.Application.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace BibliotecaApi.Library.API.Controllers
 {  
@@ -22,6 +23,10 @@ namespace BibliotecaApi.Library.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Obtém todos os livros emprestados
+        /// </summary>
+        /// <returns>Retorna os livros emprestados</returns>
         //GET: /api/Livro/LivrosEmprestados  
         [HttpGet]
         [Route("LivrosEmprestados")]
@@ -35,6 +40,10 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(emprestadosDto);
         }
 
+        /// <summary>
+        /// Obtém todos os livros
+        /// </summary>
+        /// <returns>Retorna todos os livros</returns>
         //GET: /api/Livro/TodosOsLivros
         [HttpGet]
         [Route("TodosOsLivros")]
@@ -48,9 +57,19 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(todosLivrosDto);
         }
 
+        /// <summary>
+        /// Pesquisa um livro emprestado
+        /// </summary>
+        /// <param name="titulo"></param>
+        /// <param name="autor"></param>
+        /// <param name="genero"></param>
+        /// <returns>Retorna um livro emprestado</returns>
         //GET: /api/Livro/PesquisarLivroEmprestado
         [HttpGet]
         [Route("PesquisarLivroEmprestado")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<UserLivroModelDTO>>> GetLibraryPesquisa(string? titulo, string? autor, string? genero)
         {
@@ -66,9 +85,19 @@ namespace BibliotecaApi.Library.API.Controllers
 
         }
 
+        /// <summary>
+        /// Edita um livro
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="livroDto"></param>
+        /// <returns>Retorna um livro editado</returns>
         //GET: /api/Livro/EditarUmLivro/id
         [HttpPut]
         [Route("EditarUmLivro/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         //[Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<LivroModelDTO>> GetLibraryInformation(int id, LivroModelDTO livroDto)
         {
@@ -88,9 +117,17 @@ namespace BibliotecaApi.Library.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Cadastra um novo livro
+        /// </summary>
+        /// <param name="livroDto"></param>
+        /// <returns>Retorna um livro cadastrado</returns>
         //GET: /api/Livro/Cadastramento
         [HttpPost]
         [Route("Cadastramento")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<LivroModelDTO>> GetLivroRegistration(LivroModelDTO livroDto)
         {
@@ -105,9 +142,17 @@ namespace BibliotecaApi.Library.API.Controllers
             return Ok(livroDto);
         }
 
+        /// <summary>
+        /// Devolve um livro emprestado
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Devolve um livro</returns>
         //GET: /api/Livro/DevolverLivroEmprestado/id
         [HttpDelete]
         [Route("DevolverLivroEmprestado/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<LivroModelDTO>> GetLibraryDelete(int id)
         {
@@ -123,9 +168,17 @@ namespace BibliotecaApi.Library.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Empresta um livro
+        /// </summary>
+        /// <param name="emprestimoDto"></param>
+        /// <returns>Retorna um livro emprestado</returns>
         //GET: /api/Livro/EmprestarLivro
         [HttpPost]
         [Route("EmprestarLivro")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         //[Authorize(Policy = "UserOnly")]
         public async Task<ActionResult> GetLivroEmprestimo(UserLivroModelDTO emprestimoDto)
         {
